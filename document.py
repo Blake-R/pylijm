@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from six import add_metaclass, iteritems
 
-from metacls import DocumentMCS, document_init
+from .metacls import DocumentMCS, document_init
 
 
 @add_metaclass(DocumentMCS)

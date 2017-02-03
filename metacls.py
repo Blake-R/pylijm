@@ -5,9 +5,9 @@ from collections import OrderedDict
 
 from six import iteritems
 
-import options as opts
-from defs import options_field, defaults_field, fields_field, values_field, all_fields
-from field import Field, NoDefaultValue
+from . import options as opts
+from .defs import options_field, defaults_field, fields_field, values_field, all_fields
+from .field import Field, NoDefaultValue
 
 
 class DocumentMCS(type):
@@ -41,7 +41,7 @@ class DocumentMCS(type):
             raise TypeError('New document type %s should not have member %s'
                             % (what, fields_field))
 
-        private_prefix = '_' if options[opts.allows_semiprivate_fields] else '__'
+        private_prefix = '__' if options[opts.allows_semiprivate_fields] else '_'
 
         for name, ftype in iteritems(dict_):
             if name.startswith(private_prefix):
