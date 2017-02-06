@@ -1,7 +1,9 @@
 # -*- coding: utf8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from abc import ABCMeta, abstractproperty, abstractmethod
+from abc import ABCMeta, abstractproperty
+
+from six import PY2
 
 
 def List(vtypes):
@@ -11,7 +13,7 @@ def List(vtypes):
         @property
         def value_types(self):
             return vtypes
-    _List.__name__ = 'List'
+    _List.__name__ = b'List' if PY2 else 'List'
     return _List
 
 
