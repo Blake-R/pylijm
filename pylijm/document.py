@@ -6,12 +6,11 @@ from collections import Mapping
 
 from six import add_metaclass
 
-from pylijm.dockbase import DocumentBase
-from pylijm.metacls import DocumentMCS
+from pylijm.metacls import DocumentMCS, document_init
 
 
 @add_metaclass(DocumentMCS.with_other(ABCMeta))
-class Document(DocumentBase):
+class Document(Mapping):
     """
     :type __options__: dict[options.Option, object]
     :type __defaults__: dict[str, object]
@@ -24,7 +23,11 @@ class Document(DocumentBase):
         return {}  # Wrapped in metaclass.
 
     def __init__(self, dict_to_wrap=None, *args, **init_values):
-        super(Document, self).__init__() # Wrapped in metaclass.
+        document_init(self, dict_to_wrap, init_values)
+        if args or init_values:
+            raise AttributeError('Unexpected values: %r, %r'
+                                  % (dict(enumerate(args)), init_values))
+        super(Document, self).__init__()
 
     def __repr__(self):
         return '%s(%s)' % (type(self).__name__, self.dict)

@@ -8,7 +8,6 @@ from six import iteritems, PY2
 from pylijm import options as opts
 from pylijm.defs import *
 from pylijm.defs import dict_property
-from pylijm.dockbase import DocumentBase
 from pylijm.field import Field, NoDefaultValue
 
 
@@ -51,6 +50,9 @@ class DocumentMCS(type):
         if fields_field in dict_:
             raise TypeError('New document type %s should not have member %s'
                             % (what, fields_field))
+        if values_field in dict_:
+            raise TypeError('New document type %s should not have member %s'
+                            % (what, values_field))
 
         private_prefix = '__' if options[opts.allows_semiprivate_fields] else '_'
 
@@ -66,15 +68,11 @@ class DocumentMCS(type):
             raise RuntimeError('%s have unknown fields in defaults: %r'
                                % (what, defaults))
 
-        assert fields_field not in dict_
-        assert values_field not in dict_
-
         dict_.update(fields)
         dict_[options_field] = options
         dict_[defaults_field] = defaults
         dict_[fields_field] = fields
         dict_[dict_property] = property(get_values_field)
-        dict_['__init__'] = document_init
 
         return super(DocumentMCS, mcs).__new__(mcs, what, bases, dict_)
 
@@ -95,7 +93,7 @@ class DocumentMCS(type):
         super(DocumentMCS, cls).__setattr__(name, value)
 
 
-def document_init(self, dict_to_wrap=None, *args, **init_values):
+def document_init(self, dict_to_wrap, init_values):
     cls = type(self)
     fields = getattr(cls, fields_field)
     values = dict_to_wrap if dict_to_wrap is not None else {}
@@ -115,12 +113,6 @@ def document_init(self, dict_to_wrap=None, *args, **init_values):
                 values[k] = f.cast(v)
 
     setattr(self, values_field, values)
-
-    if args or init_values:
-        raise AttributeError('Unexpected values: %r, %r'
-                             % (dict(enumerate(args)), init_values))
-
-    super(DocumentBase, self).__init__()
 
 
 def get_values_field(self):
