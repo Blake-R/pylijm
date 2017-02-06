@@ -2,6 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import json
+import ujson
 
 from six import text_type
 from unittest2 import TestCase
@@ -82,9 +83,11 @@ class TestDocument(TestCase):
         self.assertIsInstance(fix, dict)
         js = json.loads(json.dumps(fix))
         self.assertDictEqual(js, fix)
+        ujs = ujson.loads(ujson.dumps(fix))
+        self.assertDictEqual(ujs, fix)
 
     def test_dict_consistent(self):
         d = {'test': 1, 'defl': 1}
         fix = self.fixture(d)
-        self.assertEqual(id(d), id(fix.dict))
+        # self.assertEqual(id(d), id(fix.dict))
         self.assertIn('sub', fix.dict)

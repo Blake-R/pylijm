@@ -6,10 +6,6 @@ from six import add_metaclass, iterkeys, PY2
 from pylijm.metacls import DocumentMCS, document_init, document_update
 
 
-# Some field of dict are not rewrited, cause json.dumps returns empty object.
-_dict_hack = dict(**{'_': None})
-
-
 @add_metaclass(DocumentMCS)
 class Document(dict):
     """
@@ -24,11 +20,12 @@ class Document(dict):
         return {}  # Wrapped in metaclass.
 
     def __init__(self, dict_to_wrap=None, *args, **init_values):
-        document_init(self, dict_to_wrap, init_values)
+        # TODO: Make Document class wrap dict instead make it copy.
+        values = document_init(self, dict_to_wrap, init_values)
         if args or init_values:
             raise AttributeError('Unexpected arguments: %r, %r'
                                  % (dict(enumerate(args)), init_values))
-        super(Document, self).__init__(_dict_hack)
+        super(Document, self).__init__(values)
 
     def clear(self):
         for k in iterkeys(self.dict):
@@ -37,6 +34,7 @@ class Document(dict):
     def copy(self):
         return type(self)(self.dict)
 
+    '''
     @staticmethod
     def fromkeys(s, v=None):
         raise NotImplementedError()
@@ -62,6 +60,7 @@ class Document(dict):
 
     def keys(self):
         return self.dict.keys()
+    '''
 
     def pop(self, k, d=None):
         r = self.dict.get(k, d)
@@ -84,6 +83,7 @@ class Document(dict):
             raise AttributeError('Unexpected arguments: %r'
                                   % (update_values,))
 
+    '''
     def values(self):
         return self.dict.values()
 
@@ -102,10 +102,12 @@ class Document(dict):
 
     def __contains__(self, k):
         return k in self.dict
+    '''
 
     def __delitem__(self, k):
         delattr(self, k)
 
+    '''
     def __eq__(self, y):
         return self.dict.__eq__(y)
 
@@ -132,6 +134,7 @@ class Document(dict):
 
     def __ne__(self, y):
         return self.dict.__ne__(y)
+    '''
 
     def __repr__(self):
         return '%s(%s)' % (type(self).__name__, self.dict)
@@ -139,12 +142,10 @@ class Document(dict):
     def __setitem__(self, k, v):
         setattr(self, k, v)
 
+    '''
     def __sizeof__(self):
         return object.__sizeof__(self)
+    '''
 
-    __hash__ = None
-
-    def __getattribute__(self, key):
-        return object.__getattribute__(self, key)
 
 __all__ = ['Document']

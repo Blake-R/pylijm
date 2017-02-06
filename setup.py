@@ -29,6 +29,6 @@ setup(
     packages=find_packages(exclude=['tests']),
     install_requires=['six'],
     extras_require={
-        'tests': ['unittest2']
+        'tests': ['unittest2', 'ujson']
     }
 )

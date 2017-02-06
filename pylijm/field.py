@@ -70,14 +70,14 @@ class Field(object):
         if not instance:
             return self
         try:
-            return instance.dict[self._name]
+            return dict.__getitem__(instance, self._name)
         except KeyError:
             reraise(AttributeError, *exc_info()[1:])
 
     def __set__(self, instance, value):
-        instance.dict[self._name] = self.checked(value)
+        dict.__setitem__(instance, self._name, self.checked(value))
 
     def __delete__(self, instance):
         if self._default is NoDefaultValue:
             raise AttributeError('You should not delete field "%s" without default value' % self._name)
-        instance.dict[self._name] = self._default
+        dict.__setitem__(instance, self._name, self._default)

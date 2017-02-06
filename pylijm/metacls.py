@@ -72,7 +72,7 @@ class DocumentMCS(type):
         dict_[options_field] = options
         dict_[defaults_field] = defaults
         dict_[fields_field] = fields
-        dict_[dict_property] = property(get_values_field)
+        dict_[dict_property] = property(lambda d: d) # property(get_values_field)
 
         return super(DocumentMCS, mcs).__new__(mcs, what, bases, dict_)
 
@@ -112,7 +112,7 @@ def document_init(self, dict_to_wrap, init_values):
             if not isinstance(v, f.type):
                 values[k] = f.cast(v)
 
-    setattr(self, values_field, values)
+    return values
 
 
 def document_update(self, dict_for_update, update_values):
