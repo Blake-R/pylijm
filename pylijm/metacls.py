@@ -10,10 +10,19 @@ from pylijm.defs import *
 from pylijm.field import Field, NoDefaultValue
 
 
+_multimetas = {}
+
+
 class DocumentMCS(type):
     @staticmethod
     def with_other(other, *others):
-        return type(b'ModelType' if PY2 else 'ModelType', (DocumentMCS, other) + others, {})
+        all_clss = (DocumentMCS, other) + others
+        multimetaname = ','.join(sorted((x.__name__ for x in all_clss)))
+        if multimetaname in _multimetas:
+            return _multimetas[multimetaname]
+        multimetacls = type(b'DocumentMultiMCS' if PY2 else 'DocumentMultiMCS', all_clss, {})
+        _multimetas[multimetaname] = multimetacls
+        return multimetacls
 
     def __new__(mcs, what, bases, dict_):
         """
