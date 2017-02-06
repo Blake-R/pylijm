@@ -1,6 +1,8 @@
 # -*- coding: utf8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import json
+
 from unittest2 import TestCase
 
 from pylijm.document import Document
@@ -9,11 +11,16 @@ from pylijm.document import Document
 class TestDocument(TestCase):
     @property
     def fixture(self):
+        class Sub(Document):
+            sub = str
+
         class Fix(Document):
             test = int
             defl = int
+            sub = Sub
             __defaults__ = {
-                'defl': 0
+                'defl': 0,
+                'sub': Sub(sub='test')
             }
         return Fix
 
@@ -71,9 +78,11 @@ class TestDocument(TestCase):
 
     def test_as_dict(self):
         fix = self.fixture(test=1)
-        self.assertDictEqual({'test': 1, 'defl': 0}, fix.dict)
+        js = json.loads(json.dumps(fix))
+        self.assertDictEqual(js, fix)
 
     def test_dict_consistent(self):
         d = {'test': 1, 'defl': 1}
         fix = self.fixture(d)
         self.assertEqual(id(d), id(fix.dict))
+        self.assertIn('sub', fix.dict)
