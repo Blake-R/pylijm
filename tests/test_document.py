@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from unittest2 import TestCase
 
-from document import Document
+from pylijm.document import Document
 
 
 class TestDocument(TestCase):

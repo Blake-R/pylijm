@@ -1,10 +1,9 @@
 # -*- coding: utf8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from six import text_type
 from unittest2 import TestCase
 
-from list import List
+from pylijm.list import List
 
 
 class TestDict(TestCase):

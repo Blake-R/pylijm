@@ -5,9 +5,9 @@ from collections import OrderedDict
 
 from six import iteritems
 
-import options as opts
-from defs import options_field, defaults_field, fields_field, values_field, all_fields
-from field import Field, NoDefaultValue
+from pylijm import options as opts
+from pylijm.defs import *
+from pylijm.field import Field, NoDefaultValue
 
 
 class DocumentMCS(type):

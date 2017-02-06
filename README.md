@@ -1,2 +1,2 @@
 # pylijm
-Python **Li**ght **J**SON **M**odel
+Python **Li**ghtweight **J**SON **M**odel

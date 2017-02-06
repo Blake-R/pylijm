@@ -3,8 +3,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from six import add_metaclass
 
-from mixin import AsDictMixin
-from metacls import DocumentMCS, document_init
+from pylijm.metacls import DocumentMCS, document_init
+from pylijm.mixin import AsDictMixin
 
 
 @add_metaclass(DocumentMCS)

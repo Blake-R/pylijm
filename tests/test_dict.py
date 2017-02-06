@@ -4,7 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from six import text_type
 from unittest2 import TestCase
 
-from dict import Dict
+from pylijm.dict import Dict
 
 
 class TestDict(TestCase):
