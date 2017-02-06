@@ -24,7 +24,7 @@ class Document(AsDictMixin):
         super(Document, self).__init__()
 
     def __repr__(self):
-        return '%s(%s)' % (type(self).__name__, self.as_dict())
+        return '%s(%s)' % (type(self).__name__, self.as_dict_())
 
     def as_dict_(self):
         return self.__values__
