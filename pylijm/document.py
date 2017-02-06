@@ -1,16 +1,17 @@
 # -*- coding: utf8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from abc import ABCMeta
 from collections import Mapping
 
 from six import add_metaclass
 
-from abc import ABCMeta
-from pylijm.metacls import DocumentMCS, document_init, values_field
+from pylijm.dockbase import DocumentBase
+from pylijm.metacls import DocumentMCS
 
 
 @add_metaclass(DocumentMCS.with_other(ABCMeta))
-class Document(Mapping):
+class Document(DocumentBase):
     """
     :type __options__: dict[options.Option, object]
     :type __defaults__: dict[str, object]
@@ -18,24 +19,24 @@ class Document(Mapping):
     :type __values__: dict[str, object]
     """
 
+    @property
+    def dict(self):
+        return {}  # Wrapped in metaclass.
+
     def __init__(self, dict_to_wrap=None, *args, **init_values):
-        document_init(self, dict_to_wrap, init_values)
-        if args or init_values:
-            raise AttributeError('Unexpected values: %r, %r'
-                               % (dict(enumerate(args)), init_values))
-        super(Document, self).__init__()
+        super(Document, self).__init__() # Wrapped in metaclass.
 
     def __repr__(self):
-        return '%s(%s)' % (type(self).__name__, self.__values__)
+        return '%s(%s)' % (type(self).__name__, self.dict)
 
     def __getitem__(self, key):
-        return getattr(self, values_field)[key]
+        return self.dict[key]
 
     def __iter__(self):
-        return iter(getattr(self, values_field))
+        return self.dict.__iter__()
 
     def __len__(self):
-        return len(getattr(self, values_field))
+        return len(self.dict)
 
 Mapping.register(Document)
 

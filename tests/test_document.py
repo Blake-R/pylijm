@@ -68,3 +68,12 @@ class TestDocument(TestCase):
         self.assertEqual(0, fix.defl)
         with self.assertRaises(AttributeError):
             del fix.test
+
+    def test_as_dict(self):
+        fix = self.fixture(test=1)
+        self.assertDictEqual({'test': 1, 'defl': 0}, fix.dict)
+
+    def test_dict_consistent(self):
+        d = {'test': 1, 'defl': 1}
+        fix = self.fixture(d)
+        self.assertEqual(id(d), id(fix.dict))

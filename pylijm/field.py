@@ -5,8 +5,6 @@ from sys import exc_info
 
 from six import reraise
 
-from pylijm.defs import values_field
-
 
 class NoDefaultValueClass(object):
     def __repr__(self):
@@ -72,14 +70,14 @@ class Field(object):
         if not instance:
             return self
         try:
-            return getattr(instance, values_field)[self._name]
+            return instance.dict[self._name]
         except KeyError:
             reraise(AttributeError, *exc_info()[1:])
 
     def __set__(self, instance, value):
-        getattr(instance, values_field)[self._name] = self.checked(value)
+        instance.dict[self._name] = self.checked(value)
 
     def __delete__(self, instance):
         if self._default is NoDefaultValue:
             raise AttributeError('You should not delete field "%s" without default value' % self._name)
-        getattr(instance, values_field)[self._name] = self._default
+        instance.dict[self._name] = self._default
