@@ -1,13 +1,14 @@
 # -*- coding: utf8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from six import add_metaclass, iteritems
+from six import add_metaclass
 
-from .metacls import DocumentMCS, document_init
+from mixin import AsDictMixin
+from metacls import DocumentMCS, document_init
 
 
 @add_metaclass(DocumentMCS)
-class Document(object):
+class Document(AsDictMixin):
     """
     :type __options__: dict[options.Option, object]
     :type __defaults__: dict[str, object]
@@ -23,8 +24,10 @@ class Document(object):
         super(Document, self).__init__()
 
     def __repr__(self):
-        a = ['%s=%s' % x for x in iteritems(self.__values__)]
-        return '%s(%s)' % (type(self).__name__, ', '.join(a))
+        return '%s(%s)' % (type(self).__name__, self.as_dict())
+
+    def as_dict_(self):
+        return self.__values__
 
 
 __all__ = ['Document']
