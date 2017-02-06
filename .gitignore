@@ -3,3 +3,5 @@
 
 *.py[o|c]
 
+/dist
+/pylijm.egg-info

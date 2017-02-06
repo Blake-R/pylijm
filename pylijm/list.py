@@ -11,7 +11,7 @@ def List(vtypes):
         @property
         def value_types(self):
             return vtypes
-    _List.__name__ = b'List'
+    _List.__name__ = 'List'
     return _List
 
 

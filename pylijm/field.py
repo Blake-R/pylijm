@@ -3,7 +3,7 @@ from sys import exc_info
 
 from six import reraise
 
-from defs import values_field
+from pylijm.defs import values_field
 
 
 class NoDefaultValueClass(object):

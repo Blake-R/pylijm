@@ -20,7 +20,7 @@ def Dict(ktypes, vtypes):
         @property
         def value_types(self):
             return vtypes
-    _Dict.__name__ = b'Dict'
+    _Dict.__name__ = 'Dict'
     return _Dict
 
 
