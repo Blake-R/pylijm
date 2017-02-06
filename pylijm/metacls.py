@@ -115,5 +115,24 @@ def document_init(self, dict_to_wrap, init_values):
     setattr(self, values_field, values)
 
 
+def document_update(self, dict_for_update, update_values):
+    cls = type(self)
+    fields = getattr(cls, fields_field)
+    dict_for_update = dict_for_update or {}
+
+    excess_keys = set(dict_for_update).difference(fields)
+    if excess_keys:
+        raise AttributeError('Excess keys found: %s' % (excess_keys,))
+
+    for k, f in iteritems(fields):
+        if k in update_values:
+            v = f.checked(update_values[k])
+        elif k in dict_for_update:
+            v = f.cast(dict_for_update[k])
+        else:
+            continue
+        setattr(self, k, v)
+
+
 def get_values_field(self):
     return getattr(self, values_field)

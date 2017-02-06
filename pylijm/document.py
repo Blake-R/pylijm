@@ -1,18 +1,22 @@
 # -*- coding: utf8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from six import add_metaclass, iterkeys, iteritems, itervalues, PY2
+from six import add_metaclass, iterkeys, PY2
 
-from pylijm.metacls import DocumentMCS, document_init
+from pylijm.metacls import DocumentMCS, document_init, document_update
+
+
+# Some field of dict are not rewrited, cause json.dumps returns empty object.
+_dict_hack = dict(**{'_': None})
 
 
 @add_metaclass(DocumentMCS)
 class Document(dict):
     """
-    :type __options__: dict[options.Option, object]
-    :type __defaults__: dict[str, object]
-    :type __fields__: dict[str, field.Field]
-    :type __values__: dict[str, object]
+    :type __options__: dict[pylijm.options.Option, object]
+    :type __defaults__: dict[str, any]
+    :type __fields__: dict[str, pylijm.field.Field]
+    :type __values__: dict[str, any]
     """
 
     @property
@@ -22,9 +26,9 @@ class Document(dict):
     def __init__(self, dict_to_wrap=None, *args, **init_values):
         document_init(self, dict_to_wrap, init_values)
         if args or init_values:
-            raise AttributeError('Unexpected values: %r, %r'
-                                  % (dict(enumerate(args)), init_values))
-        super(Document, self).__init__()
+            raise AttributeError('Unexpected arguments: %r, %r'
+                                 % (dict(enumerate(args)), init_values))
+        super(Document, self).__init__(_dict_hack)
 
     def clear(self):
         for k in iterkeys(self.dict):
@@ -48,13 +52,13 @@ class Document(dict):
 
     if PY2:
         def iteritems(self):
-            return iteritems(self.dict)
+            return self.dict.iteritems()
 
         def iterkeys(self):
-            return iterkeys(self.dict)
+            return self.dict.iterkeys()
 
         def itervalues(self):
-            return itervalues(self.dict)
+            return self.dict.itervalues()
 
     def keys(self):
         return self.dict.keys()
@@ -75,7 +79,10 @@ class Document(dict):
         return r
 
     def update(self, dict_for_update=None, **update_values):
-        raise NotImplementedError()
+        document_update(self, dict_for_update, update_values)
+        if update_values:
+            raise AttributeError('Unexpected arguments: %r'
+                                  % (update_values,))
 
     def values(self):
         return self.dict.values()
@@ -90,14 +97,26 @@ class Document(dict):
         def viewvalues(self):
             return self.dict.viewvalues()
 
+    def __cmp__(self, y):
+        return self.dict.__cmp__(y)
+
     def __contains__(self, k):
         return k in self.dict
 
     def __delitem__(self, k):
         delattr(self, k)
 
+    def __eq__(self, y):
+        return self.dict.__eq__(y)
+
     def __getitem__(self, key):
         return self.dict[key]
+
+    def __ge__(self, y):
+        return self.dict.__ge__(y)
+
+    def __gt__(self, y):
+        return self.dict.__gt__(y)
 
     def __iter__(self):
         return self.dict.__iter__()
@@ -105,11 +124,27 @@ class Document(dict):
     def __len__(self):
         return len(self.dict)
 
+    def __le__(self, y):
+        return self.dict.__le__(y)
+
+    def __lt__(self, y):
+        return self.dict.__lt__(y)
+
+    def __ne__(self, y):
+        return self.dict.__ne__(y)
+
     def __repr__(self):
         return '%s(%s)' % (type(self).__name__, self.dict)
 
     def __setitem__(self, k, v):
         setattr(self, k, v)
 
+    def __sizeof__(self):
+        return object.__sizeof__(self)
+
+    __hash__ = None
+
+    def __getattribute__(self, key):
+        return object.__getattribute__(self, key)
 
 __all__ = ['Document']

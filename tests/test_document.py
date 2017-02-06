@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import json
 
+from six import text_type
 from unittest2 import TestCase
 
 from pylijm.document import Document
@@ -12,7 +13,7 @@ class TestDocument(TestCase):
     @property
     def fixture(self):
         class Sub(Document):
-            sub = str
+            sub = text_type
 
         class Fix(Document):
             test = int
@@ -78,6 +79,7 @@ class TestDocument(TestCase):
 
     def test_as_dict(self):
         fix = self.fixture(test=1)
+        self.assertIsInstance(fix, dict)
         js = json.loads(json.dumps(fix))
         self.assertDictEqual(js, fix)
 
