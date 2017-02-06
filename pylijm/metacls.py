@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from collections import OrderedDict
 
-from six import iteritems
+from six import iteritems, PY2
 
 from pylijm import options as opts
 from pylijm.defs import *
@@ -13,7 +13,7 @@ from pylijm.field import Field, NoDefaultValue
 class DocumentMCS(type):
     @staticmethod
     def with_other(other, *others):
-        return type(b'ModelType', (DocumentMCS, other) + others, {})
+        return type(b'ModelType' if PY2 else 'ModelType', (DocumentMCS, other) + others, {})
 
     def __new__(mcs, what, bases, dict_):
         """

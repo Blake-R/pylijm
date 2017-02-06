@@ -77,7 +77,7 @@ class ListBase(list):
         super(ListBase, self).__setslice__(i, j, y)
 
     def __repr__(self):
-        return '%s(%s)' % (self.__name__, super(ListBase, self).__repr__())
+        return '%s(%s)' % (type(self).__name__, super(ListBase, self).__repr__())
 
 
 def ensure_format(types):
