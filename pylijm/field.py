@@ -61,6 +61,9 @@ class Field(object):
     def checked(self, value):
         if self.is_type(value):
             return value
+        if self._default is not NoDefaultValue and not callable(self._default):
+            if value is self._default:
+                return value
         tv, tf = type(value).__name__, self._type.__name__
         if tv == tf:
             tv = '.'.join((type(value).__module__, tv))
