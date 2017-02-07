@@ -50,7 +50,7 @@ class Field(object):
             try:
                 value = self._type(value)
             except BaseException as e:
-                z = TypeError('Cast failed for %s: %r' % (self.fullname, e))
+                z = TypeError('Cast failed for %s: %s' % (self.fullname, e))
                 z.__name__ = type(e).__name__
                 reraise(z, z if PY3 else None, exc_info()[2])
         return value
