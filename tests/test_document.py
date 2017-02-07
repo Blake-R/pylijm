@@ -4,9 +4,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import json
 import ujson
 
-from six import text_type
+from six import text_type, itervalues
 from unittest2 import TestCase
 
+from pylijm.dict import Dict
 from pylijm.document import Document
 
 
@@ -91,3 +92,15 @@ class TestDocument(TestCase):
         fix = self.fixture(d)
         # self.assertEqual(id(d), id(fix.dict))
         self.assertIn('sub', fix.dict)
+
+    def test_strange(self):
+        SubFix = self.fixture
+
+        class Fix(Document):
+            dic = Dict(int, SubFix)
+
+        fix = Fix({'dic': {str(x): {'test': 0} for x in range(4)}})
+        self.assertListEqual(
+            [True] * 4,
+            [isinstance(x, SubFix) for x in itervalues(fix.dic)]
+        )

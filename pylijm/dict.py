@@ -49,12 +49,16 @@ class DictBase(dict):
         self.convert_dict(self)
 
     def convert_dict(self, d):
-        for n in iterkeys(d):
+        update = {}
+        for n in list(d.keys()):
             k = self.cast_key(n)
             v = self.cast_value(d[n])
             if k is not n:
+                update[k] = v
                 del d[n]
-            d[k] = v
+            else:
+                d[k] = v
+        super(DictBase, self).update(update)
 
     def checked_key(self, key):
         if not isinstance(key, self.key_types):
