@@ -100,6 +100,7 @@ class TestDocument(TestCase):
             dic = Dict(int, SubFix)
 
         fix = Fix({'dic': {str(x): {'test': 0} for x in range(4)}})
+
         self.assertListEqual(
             [True] * 4,
             [isinstance(x, SubFix) for x in itervalues(fix.dic)]
