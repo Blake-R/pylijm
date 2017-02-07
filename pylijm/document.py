@@ -32,7 +32,7 @@ class Document(dict):
             delattr(self, k)
 
     def copy(self):
-        return type(self)(self.dict)
+        return type(self)(self)
 
     '''
     @staticmethod

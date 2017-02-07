@@ -96,7 +96,7 @@ class DocumentMCS(type):
 def document_init(self, dict_to_wrap, init_values):
     cls = type(self)
     fields = getattr(cls, fields_field)
-    values = dict_to_wrap.copy() if dict_to_wrap is not None else {}
+    values = dict(dict_to_wrap) if dict_to_wrap is not None else {}
 
     excess_keys = set(values).difference(fields)
     if excess_keys:
