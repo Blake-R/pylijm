@@ -5,28 +5,36 @@ from abc import ABCMeta, abstractproperty
 
 from six import iterkeys, PY2
 
+__cache = {}
+
 
 def Dict(ktypes, vtypes):
     ktypes = ensure_format(ktypes)
     vtypes = ensure_format(vtypes)
 
-    class _Dict(DictBase):
-        __slots__ = ()
+    def key_types(self):
+        return ktypes
 
-        @property
-        def key_types(self):
-            return ktypes
+    def value_types(self):
+        return vtypes
 
-        @property
-        def value_types(self):
-            return vtypes
-    _Dict.__name__ = b'Dict' if PY2 else 'Dict'
-    return _Dict
+    name = '__'.join(('Dict', build_types_name(ktypes), build_types_name(vtypes)))
+
+    if name in __cache:
+        return __cache[name]
+
+    t = type(name.encode() if PY2 else name, (DictBase,), {
+        'key_types': property(key_types),
+        'value_types': property(value_types)
+    })
+
+    __cache[name] = t
+
+    return t
 
 
 class DictBase(dict):
     __metaclass__ = ABCMeta
-    __slots__ = ()
 
     @abstractproperty
     def key_types(self):
@@ -95,3 +103,7 @@ def ensure_format(types):
         types = (types,)
     assert any(isinstance(x, type) for x in types), types
     return types
+
+
+def build_types_name(types):
+    return '__'.join('_'.join((x.__module__, x.__name__)) for x in types)

@@ -6,15 +6,27 @@ from abc import ABCMeta, abstractproperty
 from six import PY2
 
 
+__cache = {}
+
+
 def List(vtypes):
     vtypes = ensure_format(vtypes)
 
-    class _List(ListBase):
-        @property
-        def value_types(self):
-            return vtypes
-    _List.__name__ = b'List' if PY2 else 'List'
-    return _List
+    def value_types(self):
+        return vtypes
+
+    name = '__'.join(('List', build_types_name(vtypes)))
+
+    if name in __cache:
+        return __cache[name]
+
+    t = type(name.encode() if PY2 else name, (ListBase,), {
+        'value_types': property(value_types)
+    })
+
+    __cache[name] = t
+
+    return t
 
 
 class ListBase(list):
@@ -85,3 +97,7 @@ def ensure_format(types):
         types = (types,)
     assert any(isinstance(x, type) for x in types), types
     return types
+
+
+def build_types_name(types):
+    return '__'.join('_'.join((x.__module__, x.__name__)) for x in types)
