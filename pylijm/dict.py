@@ -2,7 +2,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from abc import ABCMeta, abstractproperty
-from copy import deepcopy
 
 from six import iterkeys, PY2
 
@@ -44,7 +43,7 @@ class DictBase(dict):
     def convert_dict(self, d):
         for n in iterkeys(d):
             k = self.cast_key(n)
-            v = self.cast_value(deepcopy(d[n]))
+            v = self.cast_value(d[n])
             if k is not n:
                 del d[n]
             d[k] = v

@@ -3,7 +3,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from collections import OrderedDict
 
-from copy import deepcopy
 from six import iteritems, PY2
 
 from pylijm import options as opts
@@ -111,7 +110,7 @@ def document_init(self, dict_to_wrap, init_values):
         elif k not in dict_to_wrap:
             values[k] = f.default
         else:
-            v = deepcopy(dict_to_wrap[k])
+            v = dict_to_wrap[k]
             if not isinstance(v, f.type):
                 values[k] = f.cast(v)
             else:

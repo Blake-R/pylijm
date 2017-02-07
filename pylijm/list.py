@@ -3,7 +3,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from abc import ABCMeta, abstractproperty
 
-from copy import deepcopy
 from six import PY2
 
 
@@ -31,7 +30,7 @@ class ListBase(list):
 
     def convert_list(self, l):
         for i, v in enumerate(l):
-            l[i] = self.cast_value(deepcopy(v))
+            l[i] = self.cast_value(v)
 
     def cast_value(self, value):
         if not isinstance(value, self.value_types):
