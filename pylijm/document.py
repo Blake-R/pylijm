@@ -38,7 +38,7 @@ class Document(dict):
 
     def __deepcopy__(self, memodict={}):
         return type(self)(
-            **{k: deepcopy(v, memodict) for k, v in iteritems(self)}
+            {k: deepcopy(v, memodict) for k, v in iteritems(self)}
         )
 
     '''
