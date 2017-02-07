@@ -4,7 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from copy import deepcopy
 from sys import exc_info
 
-from six import reraise
+from six import reraise, PY2, raise_from
 
 
 class NoDefaultValueClass(object):
@@ -52,7 +52,7 @@ class Field(object):
             except BaseException as e:
                 z = TypeError('Cast failed for %s: %r' % (self.fullname, e))
                 z.__name__ = type(e).__name__
-                reraise(None, z, exc_info()[2])
+                reraise(z, z, exc_info()[2])
         return value
 
     def is_type(self, value):
@@ -80,7 +80,8 @@ class Field(object):
         try:
             return dict.__getitem__(instance, self._name)
         except KeyError:
-            reraise(None, AttributeError(self.name), exc_info()[2])
+            z = AttributeError(self.name)
+            reraise(z, z, exc_info()[2])
 
     def __set__(self, instance, value):
         dict.__setitem__(instance, self._name, self.checked(value))
