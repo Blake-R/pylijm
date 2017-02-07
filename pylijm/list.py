@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from abc import ABCMeta, abstractproperty
 
+from copy import deepcopy
 from six import PY2
 
 
@@ -24,18 +25,18 @@ class ListBase(list):
     def value_types(self):
         raise NotImplementedError()
 
-    def cast_value(self, value):
-        if not isinstance(value, self.value_types):
-            value = self.value_types[0](value)
-        return value
-
     def __init__(self, *args, **kwargs):
         super(ListBase, self).__init__(*args, **kwargs)
         self.convert_list(self)
 
     def convert_list(self, l):
         for i, v in enumerate(l):
-            l[i] = self.cast_value(v)
+            l[i] = self.cast_value(deepcopy(v))
+
+    def cast_value(self, value):
+        if not isinstance(value, self.value_types):
+            value = self.value_types[0](value)
+        return value
 
     def append(self, p_object):
         p_object = self.cast_value(p_object)
