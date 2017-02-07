@@ -100,7 +100,8 @@ def document_init(self, dict_to_wrap, init_values):
 
     excess_keys = set(values).difference(fields)
     if excess_keys:
-        raise AttributeError('Excess keys found: %s' % (excess_keys,))
+        raise AttributeError('%s.%s excess keys found: %s'
+                             % (cls.__module__, cls.__name__, excess_keys))
 
     for k, f in iteritems(fields):
         if k in init_values:
@@ -122,7 +123,8 @@ def document_update(self, dict_for_update, update_values):
 
     excess_keys = set(dict_for_update).difference(fields)
     if excess_keys:
-        raise AttributeError('Excess keys found: %s' % (excess_keys,))
+        raise AttributeError('%s.%s excess keys found: %s'
+                             % (cls.__module__, cls.__name__, excess_keys))
 
     for k, f in iteritems(fields):
         if k in update_values:
