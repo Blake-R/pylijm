@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from collections import OrderedDict
 
-from six import iteritems, binary_type
+from six import iteritems, PY2
 
 from pylijm import options as opts
 from pylijm.defs import *
@@ -18,10 +18,10 @@ class DocumentMCS(type):
     @staticmethod
     def with_other(other, *others):
         all_clss = (DocumentMCS, other) + others
-        multimetaname = binary_type(','.join(sorted((x.__name__ for x in all_clss))))
+        multimetaname = ','.join(sorted((x.__name__ for x in all_clss)))
         if multimetaname in _multimetas:
             return _multimetas[multimetaname]
-        multimetacls = type(multimetaname, all_clss, {})
+        multimetacls = type(b'DocumentMultiMCS' if PY2 else 'DocumentMultiMCS', all_clss, {})
         _multimetas[multimetaname] = multimetacls
         return multimetacls
 

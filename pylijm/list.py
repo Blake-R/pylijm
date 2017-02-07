@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from abc import ABCMeta, abstractproperty
 
-from six import binary_type
+from six import PY2
 
 
 def List(vtypes):
@@ -13,7 +13,7 @@ def List(vtypes):
         @property
         def value_types(self):
             return vtypes
-    _List.__name__ = binary_type('List')
+    _List.__name__ = b'List' if PY2 else 'List'
     return _List
 
 
