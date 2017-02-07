@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from copy import deepcopy
 from sys import exc_info
 
 from six import reraise
@@ -31,7 +32,9 @@ class Field(object):
     def default(self):
         if self._default is NoDefaultValue:
             raise ValueError('Field "%s" does not have default value' % self.fullname)
-        return self._default if not callable(self._default) else self._default()
+        if callable(self._default):
+            return self._default()
+        return deepcopy(self._default)
 
     def __init__(self, modelname, name, ftype, default):
         super(Field, self).__init__()
