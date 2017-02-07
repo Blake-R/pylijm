@@ -47,7 +47,12 @@ class Field(object):
         if value is None:
             return self.default
         if not self.is_type(value):
-            value = self._type(value)
+            try:
+                value = self._type(value)
+            except BaseException as e:
+                z = TypeError('Cast failed for %s: %r' % (self.fullname, e))
+                z.__name__ = type(e).__name__
+                reraise(None, z, exc_info()[2])
         return value
 
     def is_type(self, value):
@@ -75,7 +80,7 @@ class Field(object):
         try:
             return dict.__getitem__(instance, self._name)
         except KeyError:
-            reraise(AttributeError, *exc_info()[1:])
+            reraise(None, AttributeError(self.name), exc_info()[2])
 
     def __set__(self, instance, value):
         dict.__setitem__(instance, self._name, self.checked(value))
