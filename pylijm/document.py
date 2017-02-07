@@ -137,7 +137,7 @@ class Document(dict):
     '''
 
     def __repr__(self):
-        return '%s(%s)' % (type(self).__name__, self.dict)
+        return '%s(%s)' % (type(self).__name__, dict.__repr__(self))
 
     def __setitem__(self, k, v):
         setattr(self, k, v)
