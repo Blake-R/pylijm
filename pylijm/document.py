@@ -1,7 +1,9 @@
 # -*- coding: utf8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from six import add_metaclass, iterkeys, PY2
+from copy import deepcopy
+
+from six import add_metaclass, iterkeys, iteritems
 
 from pylijm.metacls import DocumentMCS, document_init, document_update
 
@@ -33,6 +35,11 @@ class Document(dict):
 
     def copy(self):
         return type(self)(self)
+
+    def __deepcopy__(self, memodict={}):
+        return type(self)(
+            **{k: deepcopy(v, memodict) for k, v in iteritems(self)}
+        )
 
     '''
     @staticmethod

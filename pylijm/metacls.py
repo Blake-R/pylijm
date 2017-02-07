@@ -95,9 +95,10 @@ class DocumentMCS(type):
 
 
 def document_init(self, dict_to_wrap, init_values):
+    dict_to_wrap = dict_to_wrap or {}
     cls = type(self)
     fields = getattr(cls, fields_field)
-    values = deepcopy(dict_to_wrap) if dict_to_wrap is not None else {}
+    values = {}
 
     excess_keys = set(values).difference(fields)
     if excess_keys:
@@ -107,12 +108,14 @@ def document_init(self, dict_to_wrap, init_values):
     for k, f in iteritems(fields):
         if k in init_values:
             values[k] = f.checked(init_values.pop(k))
-        elif k not in values:
+        elif k not in dict_to_wrap:
             values[k] = f.default
         else:
-            v = values[k]
+            v = deepcopy(dict_to_wrap[k])
             if not isinstance(v, f.type):
                 values[k] = f.cast(v)
+            else:
+                values[k] = v
 
     return values
 
