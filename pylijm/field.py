@@ -31,7 +31,7 @@ class Field(object):
     def default(self):
         if self._default is NoDefaultValue:
             raise ValueError('Field "%s" does not have default value' % self.fullname)
-        return self._default
+        return self._default if not callable(self._default) else self._default()
 
     def __init__(self, modelname, name, ftype, default):
         super(Field, self).__init__()
@@ -80,4 +80,4 @@ class Field(object):
     def __delete__(self, instance):
         if self._default is NoDefaultValue:
             raise AttributeError('You should not delete field "%s" without default value' % self._name)
-        dict.__setitem__(instance, self._name, self._default)
+        dict.__setitem__(instance, self._name, self.default)

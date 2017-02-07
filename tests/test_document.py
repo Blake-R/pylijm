@@ -21,7 +21,7 @@ class TestDocument(TestCase):
             defl = int
             sub = Sub
             __defaults__ = {
-                'defl': 0,
+                'defl': lambda: 0,
                 'sub': Sub(sub='test')
             }
         return Fix
