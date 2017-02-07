@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from abc import ABCMeta, abstractproperty
 
-from six import iterkeys, PY2
+from six import iterkeys, binary_type
 
 
 def Dict(ktypes, vtypes):
@@ -20,7 +20,7 @@ def Dict(ktypes, vtypes):
         @property
         def value_types(self):
             return vtypes
-    _Dict.__name__ = b'Dict' if PY2 else 'Dict'
+    _Dict.__name__ = binary_type('Dict')
     return _Dict
 
 
