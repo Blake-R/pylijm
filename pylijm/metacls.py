@@ -99,7 +99,7 @@ def document_init(self, dict_to_wrap, init_values):
     fields = getattr(cls, fields_field)
     values = {}
 
-    excess_keys = set(values).difference(fields)
+    excess_keys = set(dict_to_wrap).difference(fields)
     if excess_keys:
         raise AttributeError('%s.%s excess keys found: %s'
                              % (cls.__module__, cls.__name__, excess_keys))
