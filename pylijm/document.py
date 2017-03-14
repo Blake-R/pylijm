@@ -37,7 +37,7 @@ class Document(dict):
     '''
     @staticmethod
     def fromkeys(s, v=None):
-        raise NotImplementedError()
+        raise RuntimeError('"Document.fromkeys" will not implemented')
 
     def get(self, k, d=None):
         return self.dict.get(k, d)
@@ -68,7 +68,7 @@ class Document(dict):
         return r
 
     def popitem(self):
-        raise NotImplementedError()
+        raise RuntimeError('"Document.popitem" will not implemented')
 
     def setdefault(self, k, d=None):
         r = self.dict[k]
