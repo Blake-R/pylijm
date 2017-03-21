@@ -106,15 +106,15 @@ def document_init(self, dict_to_wrap, init_values):
 
     for k, f in iteritems(fields):
         if k in init_values:
-            values[k] = f.checked(init_values.pop(k))
+            v = f.checked(init_values.pop(k))
         elif k not in dict_to_wrap:
-            values[k] = f.default
+            v = f.default
         else:
             v = dict_to_wrap[k]
             if not isinstance(v, f.type):
-                values[k] = f.cast(v)
-            else:
-                values[k] = v
+                v = f.cast(v)
+        if v is not None:
+            values[k] = v
 
     return values
 
@@ -136,7 +136,8 @@ def document_update(self, dict_for_update, update_values):
             v = f.cast(dict_for_update[k])
         else:
             continue
-        setattr(self, k, v)
+        if v is not None:
+            setattr(self, k, v)
 
 
 def get_values_field(self):
