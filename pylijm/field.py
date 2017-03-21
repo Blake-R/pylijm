@@ -78,18 +78,21 @@ class Field(object):
         return '%s(type=%s, default=%r)' % (self.fullname, t, self._default)
 
     def __get__(self, instance, owner=None):
-        if not instance:
+        if instance is None:
             return self
-        try:
-            return dict.__getitem__(instance, self._name)
-        except KeyError:
-            z = AttributeError(self.name)
-            reraise(z, z if PY3 else None, exc_info()[2])
+        return dict.get(instance, self._name, None)
 
     def __set__(self, instance, value):
-        dict.__setitem__(instance, self._name, self.checked(value))
+        value = self.checked(value)
+        self.__set_value(instance, value)
 
     def __delete__(self, instance):
         if self._default is NoDefaultValue:
             raise AttributeError('You should not delete field "%s" without default value' % self._name)
-        dict.__setitem__(instance, self._name, self.default)
+        self.__set_value(instance, self.default)
+
+    def __set_value(self, instance, value):
+        if value is None:
+            dict.pop(instance, self._name, None)
+        else:
+            dict.__setitem__(instance, self._name, value)

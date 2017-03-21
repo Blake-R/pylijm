@@ -79,6 +79,30 @@ class TestDocument(TestCase):
         with self.assertRaises(AttributeError):
             del fix.test
 
+    def test_set_to_none(self):
+        class Fix(Document):
+            test = int
+            __defaults__ = {
+                'test': None
+            }
+        fix = Fix(test=0)
+        self.assertEqual(0, fix.test)
+        fix.test = None
+        self.assertNotIn('test', fix)
+        self.assertIsNone(fix.test)
+
+    def test_unset_to_none(self):
+        class Fix(Document):
+            test = int
+            __defaults__ = {
+                'test': None
+            }
+        fix = Fix(test=0)
+        self.assertEqual(0, fix.test)
+        del fix.test
+        self.assertNotIn('test', fix)
+        self.assertIsNone(fix.test)
+
     def test_as_dict(self):
         fix = self.fixture(test=1)
         self.assertIsInstance(fix, dict)

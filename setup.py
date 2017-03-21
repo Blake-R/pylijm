@@ -9,7 +9,7 @@ with open(path.join(path.dirname(__file__), 'README.md'), 'r') as fp:
 
 setup(
     name='pylijm',
-    version='1.0.0b3',
+    version='1.1b1',
     description='Python Lightweight JSON Model',
     long_description=long_description,
     url='https://github.com/blake-r/pylijm',
